@@ -1,20 +1,19 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { createStackNavigator } from "react-navigation-stack";
+import { createAppContainer } from "react-navigation";
+import IndexScreen from "./src/screens/IndexScreen";
+import React from "react";
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+const navigator = createStackNavigator({
+  Index: IndexScreen,
+}, {
+  initialRouteName: "Index",
+  defaultNavigationOptions: {
+    title: "Blog",
+  }
 });
+// createAppContainer is a function that takes a component and returns a component
+const App = createAppContainer(navigator);
+// wrapped in custom component to add a provider and add a context system
+export default () => {
+  return <App />;
+};
