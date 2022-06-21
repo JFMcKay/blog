@@ -1,15 +1,27 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { StyleSheet, Text, View, FlatList, Button, TouchableOpacity } from 'react-native'
 import { Context as BlogContext } from '../context/BlogContext';
 import { AntDesign } from '@expo/vector-icons';
 
+
 const IndexScreen = ({ navigation }) => {
-    const { state, addBlogPost, deleteBlogPost } = useContext(BlogContext);
+    const { state, deleteBlogPost, getBlogPosts } = useContext(BlogContext);
+    // Called after the first render.
+    useEffect(() => {
+        getBlogPosts();
+
+        const listener = navigation.addListener('didFocus', () => {
+            getBlogPosts();
+        })
+
+        return () => {
+            // Called before the component is removed from the DOM. Prevents memory leaks.
+            listener.remove();
+        }
+    }, []);
 
     return (
         <View>
-            <Text>Index Screen</Text>
-            <Button title="Add Post" onPress={addBlogPost} />
             <FlatList
                 data={state}
                 keyExtractor={(blogPost) => blogPost.id}
@@ -48,7 +60,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         padding: 20,
-
         borderBottomWidth: 1,
     },
     title: {
